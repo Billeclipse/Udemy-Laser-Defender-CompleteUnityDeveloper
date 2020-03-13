@@ -14,7 +14,7 @@ public class EnemyBehaviour : MonoBehaviour {
 	private ScoreKeeper scoreKeeper;
 	
 	void Start(){
-		scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();		
+		scoreKeeper = FindObjectOfType<ScoreKeeper>();		
 	}	
 	
 	void OnTriggerEnter2D(Collider2D collider){
@@ -36,7 +36,7 @@ public class EnemyBehaviour : MonoBehaviour {
 	
 	void Fire(){		
 		GameObject beam = Instantiate(projectile, new Vector3(transform.position.x,transform.position.y - 0.5f,transform.position.z), Quaternion.identity) as GameObject;		
-		beam.rigidbody2D.velocity = new Vector3(0,-projectileSpeed,0);
+		beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0,-projectileSpeed,0);
 		AudioSource.PlayClipAtPoint(fireSound,transform.position);
 	}
 	

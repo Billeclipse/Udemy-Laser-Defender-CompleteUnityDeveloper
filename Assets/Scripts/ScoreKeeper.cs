@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class ScoreKeeper : MonoBehaviour {
 
 	public static int score = 0;
-	private Text myText;
+	private TextMeshProUGUI myText;
 	
 	void Start(){
-		myText = GetComponent<Text>();
+		myText = GetComponent<TextMeshProUGUI>();
 		Reset();
 	}
 
@@ -18,7 +18,7 @@ public class ScoreKeeper : MonoBehaviour {
 	}
 	
 	public static void Reset(){
-		score = 0;		
+		score = 0;
 	}
 	
 }
