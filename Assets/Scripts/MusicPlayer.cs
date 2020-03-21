@@ -23,7 +23,7 @@ public class MusicPlayer : MonoBehaviour {
 			music.Play();
 		}		
 	}
-	
+
 	void OnLevelWasLoaded(int level){
 		Debug.Log("MusicPlayer : loaded level" + level);
 		music.Stop();

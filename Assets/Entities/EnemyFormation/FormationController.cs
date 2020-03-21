@@ -43,8 +43,7 @@ public class FormationController : MonoBehaviour {
 	}
 	
 	public void OnDrawGizmos(){
-		Gizmos.DrawWireCube(transform.position, new Vector3(width,height));
-	
+		Gizmos.DrawWireCube(transform.position, new Vector3(width,height));	
 	}
 	
 	// Update is called once per frame
