@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] float moveSpeed = 15f;
 	[SerializeField] float health = 250f;
 	[SerializeField] float padding = 0.5f;
-	[SerializeField] GameObject projectile;
+	[SerializeField] public GameObject projectile;
 	[SerializeField] public float projectileSpeed;
 	[SerializeField] float firingRate = 0.2f;
 	[SerializeField] public AudioClip fireSound;
@@ -48,13 +48,6 @@ public class PlayerController : MonoBehaviour {
 		yMax = upMost.y - padding;
 	}
 
-	//void Shoot()
-	//{
-	//	GameObject beam = Instantiate(projectile, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), Quaternion.identity) as GameObject;
-	//	beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
-	//	AudioSource.PlayClipAtPoint(fireSound, transform.position);
-	//}
-
 	private IEnumerator FireContinuously()
 	{
 		while (true)
@@ -76,15 +69,6 @@ public class PlayerController : MonoBehaviour {
 		{
 			StopCoroutine(firingCoroutine);
 		}
-
-		//if (Input.GetKeyDown(KeyCode.Space))
-		//{
-		//	InvokeRepeating("Shoot", 0.000001f, firingRate);
-		//}
-		//if (Input.GetKeyUp(KeyCode.Space))
-		//{
-		//	CancelInvoke("Shoot");
-		//}
 	}
 
 	private void Move()
@@ -96,16 +80,6 @@ public class PlayerController : MonoBehaviour {
 		var newYPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
 
 		transform.position = new Vector2(newXPos, newYPos);
-		
-		//if (Input.GetKey(KeyCode.RightArrow))
-		//{
-		//	position.x = Mathf.Clamp(position.x + speed * Time.deltaTime, xMin, xMax);
-		//}
-		//else if (Input.GetKey(KeyCode.LeftArrow))
-		//{
-		//	position.x = Mathf.Clamp(position.x - speed * Time.deltaTime, xMin, xMax);
-		//}
-		//transform.position = position;
 	}
 		
 	void Die(){
@@ -116,15 +90,17 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D collider)
 	{
-		Projectile missile = collider.gameObject.GetComponent<Projectile>();
-		if (missile)
+		DamageDealer damageDealer = collider.gameObject.GetComponent<DamageDealer>();
+		GetDamaged(damageDealer);
+	}
+
+	private void GetDamaged(DamageDealer damageDealer)
+	{
+		health -= damageDealer.GetDamage();
+		damageDealer.Hit();
+		if (health <= 0)
 		{
-			health -= missile.GetDamage();
-			missile.Hit();
-			if (health <= 0)
-			{
-				Die();
-			}
+			Die();
 		}
 	}
 }

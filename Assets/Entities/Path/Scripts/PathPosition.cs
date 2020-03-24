@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PathPosition : MonoBehaviour
 {
-    [SerializeField] float gizmoAreaWidth = 10f;
-    [SerializeField] float gizmoAreaheight = 5f;
+    [SerializeField] float gizmoAreaWidth = 6.5f;
+    [SerializeField] float gizmoAreaheight = 11.5f;
 
     public void OnDrawGizmos()
     {

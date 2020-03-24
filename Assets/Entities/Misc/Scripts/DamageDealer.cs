@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Projectile : MonoBehaviour {
-	public float damage = 100f;
+public class DamageDealer : MonoBehaviour {
+	[SerializeField] int damage = 50;
 	
-	public float GetDamage(){
+	public int GetDamage(){
 		return damage;	
 	}
 	

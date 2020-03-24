@@ -9,7 +9,7 @@ public class ScoreDisplay : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		myText = GetComponent<TextMeshProUGUI>();
-		myText.text = ScoreKeeper.score.ToString();
+		myText.text = ScoreKeeper.GetScore().ToString();
 		ScoreKeeper.Reset();
 	}
 }

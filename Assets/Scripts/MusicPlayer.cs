@@ -24,19 +24,19 @@ public class MusicPlayer : MonoBehaviour {
 		}		
 	}
 
-	void OnLevelWasLoaded(int level){
-		Debug.Log("MusicPlayer : loaded level" + level);
-		music.Stop();
-		if(level == 0){
-			music.clip = startClip;
-		}
-		else if(level == 1){
-			music.clip = gameClip;
-		}
-		else if(level == 2){
-			music.clip = endClip;
-		}		
-		music.loop = true;
-		music.Play();
-	}
+	//void OnLevelWasLoaded(int level){
+	//	Debug.Log("MusicPlayer : loaded level" + level);
+	//	music.Stop();
+	//	if(level == 0){
+	//		music.clip = startClip;
+	//	}
+	//	else if(level == 1){
+	//		music.clip = gameClip;
+	//	}
+	//	else if(level == 2){
+	//		music.clip = endClip;
+	//	}		
+	//	music.loop = true;
+	//	music.Play();
+	//}
 }

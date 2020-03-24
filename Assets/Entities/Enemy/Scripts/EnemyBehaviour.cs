@@ -10,28 +10,27 @@ public class EnemyBehaviour : MonoBehaviour {
 	public int scoreValue = 150;
 	public AudioClip fireSound;
 	public AudioClip deathSound;
-	
-	private ScoreKeeper scoreKeeper;
-	
-	void Start(){
-		scoreKeeper = FindObjectOfType<ScoreKeeper>();		
-	}	
-	
-	void OnTriggerEnter2D(Collider2D collider){
-		Projectile missile = collider.gameObject.GetComponent<Projectile>();
-		if(missile){
-			health -= missile.GetDamage();
-			missile.Hit ();
-			if(health <= 0){
-				Die();
-			}
+
+	private void OnTriggerEnter2D(Collider2D collider)
+	{
+		DamageDealer damageDealer = collider.gameObject.GetComponent<DamageDealer>();
+		GetDamaged(damageDealer);
+	}
+
+	private void GetDamaged(DamageDealer damageDealer)
+	{
+		health -= damageDealer.GetDamage();
+		damageDealer.Hit();
+		if (health <= 0)
+		{
+			Die();
 		}
 	}
-	
+
 	void Die(){
 		AudioSource.PlayClipAtPoint(deathSound,transform.position);
 		Destroy(gameObject);
-		scoreKeeper.Score(scoreValue);	
+		ScoreKeeper.Score(scoreValue);	
 	}
 	
 	void Fire(){		
