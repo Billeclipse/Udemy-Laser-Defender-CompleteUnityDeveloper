@@ -3,14 +3,23 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	[SerializeField] float moveSpeed = 15f;
+	[Header("Player")]
 	[SerializeField] float health = 250f;
+	[SerializeField] float moveSpeed = 15f;
 	[SerializeField] float padding = 0.5f;
-	[SerializeField] public GameObject projectile;
+
+	[Header("Projectile")]
+	[SerializeField] public GameObject projectilePrefab;
 	[SerializeField] public float projectileSpeed;
 	[SerializeField] float firingRate = 0.2f;
 	[SerializeField] public AudioClip fireSound;
-	
+	[Range(0f, 1f)] [SerializeField] public float fireSoundVolume = 0.2f;
+
+	[Header("Death Settings")]
+	[SerializeField] public AudioClip deathSound;
+	[Range(0f, 1f)] [SerializeField] public float deathSoundVolume = 0.2f;
+	[SerializeField] public GameObject explosionEffectPrefab;
+
 	//private Vector3 position;
 	private float xMin;
 	private float xMax;
@@ -20,14 +29,14 @@ public class PlayerController : MonoBehaviour {
 	private Coroutine firingCoroutine;
 
 	// Use this for initialization
-	void Start ()
+	private void Start ()
 	{
 		//position = this.transform.position;
 		SetUpMoveBoundaries();
-	}	
+	}
 
 	// Update is called once per frame
-	void Update ()
+	private void Update ()
 	{
 		Fire();
 		Move();
@@ -52,9 +61,9 @@ public class PlayerController : MonoBehaviour {
 	{
 		while (true)
 		{
-			GameObject beam = Instantiate(projectile, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), Quaternion.identity) as GameObject;
+			GameObject beam = Instantiate(projectilePrefab, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), Quaternion.identity) as GameObject;
 			beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
-			AudioSource.PlayClipAtPoint(fireSound, transform.position);
+			AudioSource.PlayClipAtPoint(fireSound, transform.position, fireSoundVolume);
 			yield return new WaitForSeconds(firingRate);
 		}		
 	}
@@ -82,25 +91,48 @@ public class PlayerController : MonoBehaviour {
 		transform.position = new Vector2(newXPos, newYPos);
 	}
 		
-	void Die(){
-		LevelManager man = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-		man.LoadLevel("Win Screen");		
-		Destroy(gameObject);
+	private IEnumerator Die(){
+		LevelManager levelManager = FindObjectOfType<LevelManager>();
+		GameObject explosion = Instantiate(explosionEffectPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+				
+		gameObject.GetComponent<SpriteRenderer>().forceRenderingOff = true;
+		AudioSource.PlayClipAtPoint(deathSound, transform.position, deathSoundVolume);
+		Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration);
+		Destroy(gameObject, 1.1f);
+		Time.timeScale = 0.5f;
+		yield return new WaitForSeconds(1f);
+		Time.timeScale = 1f;
+		levelManager.LoadNextLevel();
 	}
 
-	void OnTriggerEnter2D(Collider2D collider)
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		DamageDealer damageDealer = collision.gameObject.GetComponent<DamageDealer>();
+		GetDamaged(damageDealer);
+	}
+
+	private void OnTriggerEnter2D(Collider2D collider)
 	{
 		DamageDealer damageDealer = collider.gameObject.GetComponent<DamageDealer>();
-		GetDamaged(damageDealer);
+		GetDamagedByProjectile(damageDealer);
 	}
 
 	private void GetDamaged(DamageDealer damageDealer)
 	{
 		health -= damageDealer.GetDamage();
+		if (health <= 0)
+		{
+			StartCoroutine(Die());
+		}
+	}
+
+	private void GetDamagedByProjectile(DamageDealer damageDealer)
+	{
+		health -= damageDealer.GetDamage();
 		damageDealer.Hit();
 		if (health <= 0)
 		{
-			Die();
+			StartCoroutine(Die());
 		}
 	}
 }
