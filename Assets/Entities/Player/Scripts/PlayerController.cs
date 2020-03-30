@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	[Header("Player")]
-	[SerializeField] float health = 250f;
+	[SerializeField] float health = 200f;
 	[SerializeField] float moveSpeed = 15f;
 	[SerializeField] float padding = 0.5f;
 
@@ -26,12 +26,15 @@ public class PlayerController : MonoBehaviour {
 	private float yMin;
 	private float yMax;
 
+	private bool isDead = false;
+
 	private Coroutine firingCoroutine;
+	private HealthKeeper healthKeeper;
 
 	// Use this for initialization
 	private void Start ()
 	{
-		//position = this.transform.position;
+		healthKeeper = FindObjectOfType<HealthKeeper>();
 		SetUpMoveBoundaries();
 	}
 
@@ -119,20 +122,36 @@ public class PlayerController : MonoBehaviour {
 
 	private void GetDamaged(DamageDealer damageDealer)
 	{
-		health -= damageDealer.GetDamage();
-		if (health <= 0)
+		if (!isDead)
 		{
-			StartCoroutine(Die());
+			health -= damageDealer.GetDamage();
+			healthKeeper.DisplayHealth();
+			if (health <= 0)
+			{
+				isDead = true;
+				StartCoroutine(Die());
+			}
 		}
+		
 	}
 
 	private void GetDamagedByProjectile(DamageDealer damageDealer)
 	{
-		health -= damageDealer.GetDamage();
-		damageDealer.Hit();
-		if (health <= 0)
+		if (!isDead)
 		{
-			StartCoroutine(Die());
+			health -= damageDealer.GetDamage();
+			healthKeeper.DisplayHealth();
+			damageDealer.Hit();
+			if (health <= 0)
+			{
+				isDead = true;
+				StartCoroutine(Die());
+			}
 		}
+	}
+
+	public float GetHealth()
+	{
+		return health;
 	}
 }
