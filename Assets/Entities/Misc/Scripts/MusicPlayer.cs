@@ -2,10 +2,15 @@
 using System.Collections;
 
 public class MusicPlayer : MonoBehaviour {
-	
+
+	private AudioSource audioSource;
+
 	private void Awake ()
 	{
+		audioSource = GetComponent<AudioSource>();
+
 		SetUpSingleton();
+		SetDefaults();
 	}
 
 	private void SetUpSingleton()
@@ -18,5 +23,15 @@ public class MusicPlayer : MonoBehaviour {
 		{
 			DontDestroyOnLoad(gameObject);
 		}
+	}
+
+	public void SetVolume(float volume)
+	{
+		audioSource.volume = volume;
+	}
+
+	public void SetDefaults()
+	{
+		SetVolume(PlayerPrefsManager.GetMasterVolume());
 	}
 }

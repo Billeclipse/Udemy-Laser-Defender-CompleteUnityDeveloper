@@ -97,14 +97,17 @@ public class PlayerController : MonoBehaviour {
 	private IEnumerator Die(){
 		LevelManager levelManager = FindObjectOfType<LevelManager>();
 		GameObject explosion = Instantiate(explosionEffectPrefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
-				
+
 		gameObject.GetComponent<SpriteRenderer>().forceRenderingOff = true;
 		AudioSource.PlayClipAtPoint(deathSound, transform.position, deathSoundVolume);
 		Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.duration);
 		Destroy(gameObject, 1.1f);
 		Time.timeScale = 0.5f;
+
 		yield return new WaitForSeconds(1f);
-		Time.timeScale = 1f;
+
+		PlayerPrefsManager.SetHighScore(ScoreKeeper.GetScore());
+		Time.timeScale = 1f;		
 		levelManager.LoadNextLevel();
 	}
 
