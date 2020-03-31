@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] float health = 200f;
 	[SerializeField] float moveSpeed = 15f;
 	[SerializeField] float padding = 0.5f;
+	[SerializeField] float paddingForHPBar = 0.2f;
 
 	[Header("Projectile")]
 	[SerializeField] public GameObject projectilePrefab;
@@ -56,7 +57,7 @@ public class PlayerController : MonoBehaviour {
 
 		xMin = leftMost.x + padding;
 		xMax = rightMost.x - padding;
-		yMin = downMost.y + padding;
+		yMin = downMost.y + padding + paddingForHPBar;
 		yMax = upMost.y - padding;
 	}
 
